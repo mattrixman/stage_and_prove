@@ -78,10 +78,10 @@ def valid_route(s):
         raise argparse.ArgumentTypeError(msg)
 
 def parse_args():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("route", type=valid_route, 
-            help="The route to run synchronously")
+            help="The route to run synchronously. One of {}".format(provable_routes))
 
     parser.add_argument('-d', '--dueDate', 
             type=valid_date,
