@@ -92,6 +92,10 @@ def parse_args():
             default='/opt/clover/configs/billing.properties',
             help="Align with this properties file")
 
+    parser.add_argument('-s', '--socket', type=valid_file, 
+            default='/opt/clover/mysql/mysql.sock',
+            help="The mysql socket file")
+
     parser.add_argument('-t', '--timeout', type=int, 
             default=60,
             help="Timeout after this many minutes")
@@ -147,7 +151,8 @@ def main(args):
     db = _mysql.connect(user=args.profile.user, 
                         host=args.profile.host, 
                         db=args.profile.db, 
-                        passwd=args.profile.password)
+                        passwd=args.profile.password,
+			unix_socket=args.socket)
 
     # run the route
     stg_cmd = '. {} {} ; bsrun{} -d {}'.format(args.bsUtils, args.profile.filename, args.route, args.dueDate)
