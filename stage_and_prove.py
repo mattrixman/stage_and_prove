@@ -1,3 +1,5 @@
+#! /usr/local/bin/python3
+
 #  Run the specified route, wait for it to complete, then prove it
 
 import sys
@@ -10,6 +12,8 @@ import string
 import subprocess
 import _mysql
 from collections import namedtuple
+
+import IPython
 
 # is this a valid date?
 def valid_date(s):
@@ -111,16 +115,15 @@ def wait_on_success(db, request_id, timeout_minutes):
                  SELECT name, status FROM billing_request WHERE uuid = '{}';
                   """.format(request_id))
         result = db.store_result()
+
         for b_name, b_status in result.fetch_row():
             name = b_name.decode('UTF-8')
             status = b_status.decode('UTF-8')
+            print(request_id, name, status)
             if status == 'SUCCEEDED':
-                print("{} {} Completed without errors".format(name, request_id))
                 return True
             elif status == 'HAS_ERRORS':
-                print("{} {} Completed with errors".format(name, request_id))
                 return False
-        print("Waiting on {}".format(request_id))
         time.sleep(10)
     print("Timed out while waiting for request {} ".format(request_id))
     return False
@@ -132,7 +135,6 @@ def run_wait(cmd, db, args):
 
     mask = re.compile(r'[A-Z0-9]{10,15}')
     if re.match(mask, request_id):
-        print("Route {} is running".format(request_id))
         if wait_on_success(db, request_id, args.timeout):
             return request_id
         else:
@@ -152,7 +154,8 @@ def main(args):
                         host=args.profile.host, 
                         db=args.profile.db, 
                         passwd=args.profile.password,
-			unix_socket=args.socket)
+                        unix_socket=args.socket)
+    db.autocommit(True)
 
     # run the route
     stg_cmd = '. {} {} ; bsrun{} -d {}'.format(args.bsUtils, args.profile.filename, args.route, args.dueDate)
