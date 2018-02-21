@@ -11,9 +11,6 @@ import subprocess
 import _mysql
 from collections import namedtuple
 
-import IPython
-
-
 # is this a valid date?
 def valid_date(s):
     try:
@@ -102,6 +99,7 @@ def parse_args():
     return parser.parse_args()
 
 # poll the database, block until the route is successful
+# print status accordingly
 def wait_on_success(db, request_id, timeout_minutes):
     timeout = time.time() + 60*timeout_minutes
     while time.time() < timeout:
@@ -123,6 +121,7 @@ def wait_on_success(db, request_id, timeout_minutes):
     print("Timed out while waiting for request {} ".format(request_id))
     return False
 
+# run the specified command, get the route id, wait for it to complete
 def run_wait(cmd, db, args):
     print("Starting: `{}`".format(cmd))
     request_id = subprocess.check_output(['bash', '-c', cmd]).decode('ASCII')
@@ -163,4 +162,3 @@ def main(args):
 if __name__ == '__main__':
     args = parse_args()
     main(args)
-
