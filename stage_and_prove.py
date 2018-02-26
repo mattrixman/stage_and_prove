@@ -158,12 +158,12 @@ def main(args):
     db.autocommit(True)
 
     # run the route
-    stg_cmd = '. {} {} ; bsrun{} -d {}'.format(args.bsUtils, args.profile.filename, args.route, args.dueDate)
+    stg_cmd = '. {} {} ; bsrun{} -d {}'.format(args.bsUtils, args.profile.filename, args.route, args.dueDate.strftime('%Y-%m-%d'))
     stg_request = run_wait(stg_cmd, db, args)
 
     # prove the route
     prv_cmd = '. {} {} ; bsprove{} -r {} -d {}'.format(
-            args.bsUtils, args.profile.filename, args.route, stg_request, args.dueDate)
+            args.bsUtils, args.profile.filename, args.route, stg_request, args.dueDate.strftime('%Y-%m-%d'))
     prove_request = run_wait(prv_cmd, db, args)
 
 
