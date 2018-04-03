@@ -59,9 +59,9 @@ def valid_props(s):
         raise argparse.ArgumentTypeError(msg)
 
 provable_routes = {
-        "Adjustment", 
+        "Adjustment",
         "Advance",
-        "Daily", 
+        "Daily",
         "Metered",
         "Monthly",
         "Subscription",
@@ -80,28 +80,28 @@ def valid_route(s):
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("route", type=valid_route, 
+    parser.add_argument("route", type=valid_route,
             help="The route to run synchronously. One of {}".format(provable_routes))
 
-    parser.add_argument('-d', '--dueDate', 
+    parser.add_argument('-d', '--dueDate',
             type=valid_date,
             default=datetime.date.today(),
             help="The due date for the route")
 
-    parser.add_argument('-b', '--bsUtils', type=valid_file, 
+    parser.add_argument('-b', '--bsUtils', type=valid_file,
             default='/opt/clover/billing/test-tools/bin/bsUtils.sh',
             help="Source this bsUtils before running routes")
 
-    parser.add_argument('-p', '--profile', type=valid_props, 
+    parser.add_argument('-p', '--profile', type=valid_props,
             default='/opt/clover/configs/billing.properties',
             help="Align with this properties file")
 
-    parser.add_argument('-s', '--socket', type=valid_file, 
+    parser.add_argument('-s', '--socket', type=valid_file,
             default='/opt/clover/mysql/mysql.sock',
             help="The mysql socket file")
 
-    parser.add_argument('-t', '--timeout', type=int, 
-            default=60,
+    parser.add_argument('-t', '--timeout', type=int,
+            default=300,
             help="Timeout after this many minutes")
 
     return parser.parse_args()
